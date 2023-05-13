@@ -44,4 +44,4 @@ After setting up your environment variables, you can run the application by runn
 
 - During the first run, the script will build the Docker image and start the application.
 - Simultaneously, it will also create the database tables and seed the database with sample data.
-- Application will be available at `http://localhost:8080`, after MySQL docker is ready.
+- Application will be available at `http://localhost:8080`, after MySQL docker is ready and passed the health check.

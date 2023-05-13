@@ -29,7 +29,7 @@ app.post("/orders", async (req, res) => {
     if (!utils.isValidOrder(origin, destination)) {
       return res.status(400).send(errMsg);
     }
-    
+
     const distance = await utils.getDistanceFromGoogleMaps(origin, destination);
 
     const createQuery = await model.createOrder(distance);
@@ -81,3 +81,5 @@ app.get("/orders", async (req, res) => {
     res.status(500).send(errMsg);
   }
 });
+
+module.exports = app;
