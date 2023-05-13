@@ -93,6 +93,7 @@ const getDistanceFromGoogleMaps = async (origin, destination) => {
       resGoogleMaps.on("end", async () => {
         try {
           const resBody = JSON.parse(data);
+          console.log(resBody);
           const distance = resBody.routes[0].distanceMeters;
           if (distance != undefined) {
             resolve(distance);
