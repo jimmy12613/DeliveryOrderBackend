@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  app:
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    command: bash -c "npm install && npm start"
+    ports:
+      - ${APP_PORT}:3000
+    env_file:
+      - ./.env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_ROOT_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql:latest
+    command: --authentication_policy=mysql_native_password
+    ports:
+      - ${DB_PORT}:3306
+    volumes:
+      - ./dbInit:/docker-entrypoint-initdb.d/:rw
+      - persistent:/var/lib/mysql
+    env_file:
+      - ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+volumes:
+  persistent:
